@@ -2,6 +2,7 @@ from flask import Flask, render_template
 
 app = Flask(__name__)
 
+
 @app.route('/')
 def principal():
 	frutas = ["Morango", "Uva", "Laranja", "Mamão", "Maçã", "Pêra", "Melão", "Abacaxi"]
@@ -9,4 +10,5 @@ def principal():
 
 @app.route('/sobre')
 def sobre():
-	return render_template("sobre.html")
+	notas = {"Fulano":5.0, "Beltrano":6.0, "Aluno":7.0, "Sicrano":8.5}
+	return render_template("sobre.html",notas=notas)
