@@ -1,10 +1,11 @@
 import json
 import urllib.request
 
-from flask import Flask, render_template, request
+from flask import Flask, flash, redirect, render_template, request, url_for
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
+app.secret_key = "super secret key"
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///cursos.sqlite3"
 
@@ -72,6 +73,24 @@ def filmes(propriedade):
 @app.route('/cursos')
 def lista_cursos():
 	return render_template("cursos.html",cursos = cursos.query.all())
+
+@app.route('/cria_curso', methods=["GET","POST"])
+def cria_curso():
+	nome= request.form.get('nome')
+	descricao= request.form.get('descricao')
+	ch= request.form.get('ch')
+	
+	if request.method == 'POST':
+		if not nome or not descricao or not ch:
+			flash("Preencha todos os capos do formulário","error")
+		else:	
+			curso = cursos(nome,descricao,ch)
+			db.session.add(curso)
+			db.session.commit()
+			return redirect(url_for('lista_cursos'))
+	return render_template("novo_curso.html")
+
+
 
 if __name__ =="__main__":
 	db.create_all()
